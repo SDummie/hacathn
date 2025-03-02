@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    environment:
+      - MONGODB_URI=mongodb://db:27017/security
+      - FLASK_SECRET=${SECRET_KEY}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    environment:
+      - REACT_APP_API=http://backend:5000
+    ports:
+      - "3000:3000"
+
+  db:
+    image: mongo:6.0
+    volumes:
+      - security_data:/data/db
+
+volumes:
+  security_data:
